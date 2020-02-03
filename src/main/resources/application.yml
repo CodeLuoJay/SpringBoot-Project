@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 123456
+    url: jdbc:mysql://192.168.17.104/sell?characterEncoding=utf-8&useSSL=false&serverTimezone=UTC
+    #&serverTimezone=Asia/Shanghai
+    jpa:
+      show-sql: true
+  #logging:
+#  #在控制台输出
+#  pattern:
+#    console: "%d-%msg%n"
+  #在当前项目的目录的log目录下输出日志到sell.log文件中
+#  file:
+#    name: log/sell.log
+#  file:
+server:
+  servlet:
+    context-path: /sell
+#    path: log/my.log
