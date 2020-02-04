@@ -28,65 +28,7 @@ public class BuyerProductController {
     private ProductServiceImpl productService;
     @Autowired
     private CategoryServiceImpl categoryService;
-    /*@GetMapping("/list")
-    public ResultVO list(){
-        //1.查询所有上架的商品
-        List<ProductInfo> productInfoList = productService.findUpAll();
 
-  *//*      List<Integer> categoryTypeList = new ArrayList<>();//先写一个空的
-        //1.1从所有上架的商品中取出类别编号来进行类目查询
-        for(ProductInfo productInfo:productInfoList){
-            categoryTypeList.add(productInfo.getCategoryType());
-        }*//*
-
-        *//*方式二Java8 lambda表达式 list转化为流然后获取类别，收集成list*//*
-
-        List<Integer> categoryTypeList = productInfoList.stream()
-                .map(e -> e.getCategoryType())
-                .collect(Collectors.toList());
-        //2.查询类目列表(一次性查询)
-        List<ProductCategory> productCategoryList = categoryService.findByCategoryTypeIn(categoryTypeList);
-        //3.数据拼装
-
-        //3.1先遍历类目(从外往里装)
-        //List<ProductInfoVO> productInfoVOList = new ArrayList<>();
-        List<ProductVO> productVOList = new ArrayList<>();
-        for(ProductCategory productCategory:productCategoryList){
-            //外层对象(类目)
-            ProductVO productVO = new ProductVO();
-            productVO.setCategoryName(productCategory.getCategoryName());
-            productVO.setCategoryType(productCategory.getCategoryType());
-            //productVO.setProductInfoVOList(productInfoVOList);
-            //productVOList.add(productVO);
-            List<ProductInfoVO> productInfoVOList = new ArrayList<>();
-            for (ProductInfo productInfo:productInfoList){
-                if(productInfo.getCategoryType().equals(productCategory.getCategoryType())){
-
-                    ProductInfoVO productInfoVO = new ProductInfoVO();
-*//*                    productInfoVO.setProductInfoId(productInfo.getProductId());
-                    productInfoVO.setProductInfoName(productInfo.getProductName());
-                    productInfoVO.setProductInfoPrice(productInfo.getProductPrice());
-                    productInfoVO.setProductDescription(productInfo.getProductDescription());
-                    productInfoVO.setProductIcon(productInfo.getProductIcon());
-                    productInfoVOList.add(productInfoVO);*//*
-                    BeanUtils.copyProperties(productInfo,productInfoVO);
-                    productInfoVOList.add(productInfoVO);
-                }
-            }
-            productVO.setProductInfoVOList(productInfoVOList);
-            productVOList.add(productVO);
-        }
-        ResultVO<Object> resultVO = new ResultVO<>();
-//        ProductVO productVO = new ProductVO();
-//        ProductInfoVO productInfoVO = new ProductInfoVO();
-//        productVO.setProductInfoVOList(Arrays.asList(productInfoVO));
- //       resultVO.setCode(200);
-   //     resultVO.setMessage("成功");
-//        resultVO.setData(Arrays.asList(productVO));
-        //resultVO.setData(productVOList);
-
-        return ResultVOUtil.success(productVOList);
-    }*/
     @GetMapping("/list")
     public ResultVO list(){
         //1.查询所有上架的商品列表

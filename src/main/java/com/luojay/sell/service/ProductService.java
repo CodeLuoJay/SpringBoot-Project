@@ -1,6 +1,7 @@
 package com.luojay.sell.service;
 
 import com.luojay.sell.dataobject.ProductInfo;
+import com.luojay.sell.dto.CartDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -16,8 +17,8 @@ public interface ProductService {
     //更新添加商品
     ProductInfo save(ProductInfo productInfo);
     //加库存
-
+    void increaseStock(List<CartDTO> cartDTOList);
     //减库存
-
+    void decreaseStock(List<CartDTO> cartDTOList);
 
 }
