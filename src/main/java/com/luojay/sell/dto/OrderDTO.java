@@ -10,6 +10,11 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * 跟订单主表的实体类字段一致
+ * 封装成DTO是为了更好的处理
+ * 一个主订单对应多个详情订单
+ */
 @Data
 public class OrderDTO {
     @Id

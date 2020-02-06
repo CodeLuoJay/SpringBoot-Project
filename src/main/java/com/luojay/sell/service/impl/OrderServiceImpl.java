@@ -1,5 +1,6 @@
 package com.luojay.sell.service.impl;
 
+import com.luojay.sell.converter.OrderMaster2OrderDTOConverter;
 import com.luojay.sell.dataobject.OrderDetail;
 import com.luojay.sell.dataobject.OrderMaster;
 import com.luojay.sell.dataobject.ProductInfo;
@@ -17,7 +18,9 @@ import com.luojay.sell.utils.KeyUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +39,7 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderMasterRepository orderMasterRepository;
 
+    //订单创建，加了框架事务，出异常就回滚
     @Override
     @Transactional
     public OrderDTO create(OrderDTO orderDTO) {
@@ -56,7 +60,7 @@ public class OrderServiceImpl implements OrderService {
             orderAmount= productInfo.getProductPrice()
                     .multiply(new BigDecimal(orderDetail.getProductQuantity()))
                     .add(orderAmount);
-            //3.1订单详情入库(orderMaster和orderDetail)
+            //3.1订单详情入库(orderDetail)
             BeanUtils.copyProperties(productInfo,orderDetail);
             orderDetail.setOrderId(orderId);
             orderDetail.setDetailId(KeyUtil.generateUnniqueKey());
@@ -83,14 +87,34 @@ public class OrderServiceImpl implements OrderService {
         return orderDTO;
     }
 
+    //根据orderId查询订单
     @Override
     public OrderDTO findById(String orderId) {
-        return null;
-    }
+        //查询主订单
+        OrderMaster orderMaster = orderMasterRepository.findById(orderId).orElse(null);
+        if (orderMaster==null){
+            throw new SellException(ResultEnum.PRODUCT_NOT_EXIST);
+        }
+        //查询订单详情
+        List<OrderDetail> orderDetailList = orderDetailRepository.findByOrderId(orderId);
+        if(orderDetailList==null){
 
+        }
+        OrderDTO orderDTO = new OrderDTO();
+        BeanUtils.copyProperties(orderMaster,orderDTO);
+        orderDTO.setOrderDetailList(orderDetailList);
+        return orderDTO;
+    }
+    /*查询订单列表，根据买家的openid查到他的订单列表(用到分页)*/
     @Override
     public Page<OrderDTO> findList(String buyerOpenid, Pageable pageable) {
-        return null;
+        Page<OrderMaster> orderMasterPage = orderMasterRepository.findByBuyerOpenid(buyerOpenid, pageable);
+        //不需要判断为空，查到为空原样返回
+        List<OrderDTO> orderDTOList = OrderMaster2OrderDTOConverter.convert(orderMasterPage.getContent());
+        orderMasterPage.getContent();
+        //TODO
+        Page<OrderDTO> orderDTOPage = new PageImpl<OrderDTO>(orderDTOList,pageable,orderMasterPage.getTotalElements());
+        return orderDTOPage;
     }
 
     @Override

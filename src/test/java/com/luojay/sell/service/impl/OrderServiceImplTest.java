@@ -2,11 +2,15 @@ package com.luojay.sell.service.impl;
 
 import com.luojay.sell.dataobject.OrderDetail;
 import com.luojay.sell.dto.OrderDTO;
+import com.luojay.sell.service.OrderService;
 import com.sun.org.apache.bcel.internal.generic.NEW;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +22,7 @@ class OrderServiceImplTest {
     @Autowired
     private OrderServiceImpl orderService;
     private final String BUYER_OPENID = "110123";
+    private final String ORDER_ID = "1580808533216993116";
     @Test
     void create() {
         OrderDTO orderDTO = new OrderDTO();
@@ -45,10 +50,16 @@ class OrderServiceImplTest {
 
     @Test
     void findById() {
+        OrderDTO orderDTO = orderService.findById(ORDER_ID);
+        log.info("订单详情：orderDTO:{}"+orderDTO);
+        Assert.assertEquals(ORDER_ID,orderDTO.getOrderId());
     }
 
     @Test
     void findList() {
+        PageRequest pageRequest = PageRequest.of(0, 2);
+        Page<OrderDTO> orderDTOPage = orderService.findList(BUYER_OPENID, pageRequest);
+        Assert.assertNotEquals(0,orderDTOPage.getTotalElements());
     }
 
     @Test
