@@ -112,7 +112,6 @@ public class OrderServiceImpl implements OrderService {
         //不需要判断为空，查到为空原样返回
         List<OrderDTO> orderDTOList = OrderMaster2OrderDTOConverter.convert(orderMasterPage.getContent());
         orderMasterPage.getContent();
-        //TODO
         Page<OrderDTO> orderDTOPage = new PageImpl<OrderDTO>(orderDTOList,pageable,orderMasterPage.getTotalElements());
         return orderDTOPage;
     }
